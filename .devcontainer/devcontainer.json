@@ -1,0 +1,4 @@
+{
+  "name": "Playwright",
+  "image": "mcr.microsoft.com/playwright:v1.41.0-jammy",
+}
