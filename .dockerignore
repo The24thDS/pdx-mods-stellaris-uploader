@@ -7,3 +7,10 @@ node_modules/
 *.zip
 *.mod
 .vscode
+.eslintignore
+.eslintrc.cjs
+.git/
+.gitignore
+.prettierignore
+.prettierrc
+Dockerfile
