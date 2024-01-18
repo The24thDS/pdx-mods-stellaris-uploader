@@ -1,14 +1,29 @@
 import 'dotenv/config';
-import { test, expect } from '@playwright/test';
 import path from 'path';
+import fs from 'fs';
+import invariant from 'tiny-invariant';
+import { test, expect } from '@playwright/test';
 
-const MOD_ID = '72663';
-const MOD_VERSION = '1.0.3';
-const GAME_VERSION = '3.10.1';
-const UPLOAD_TIMEOUT = 60_000 * 20;
-const RELEASE_NOTES = 'fix bug 3';
+import { getGameVersionFromDescriptor, getModVersionFromDescriptor } from './utils';
 
-test('test', async ({ page }) => {
+invariant(process.env.EMAIL, 'You must provide an EMAIL');
+invariant(process.env.PASSWORD, 'You must provide a PASSWORD');
+
+const MOD_FOLDER_PATH = path.join(__dirname, process.env.MOD_FOLDER_PATH || 'mod');
+const MOD_DESCRIPTOR_PATH = path.join(MOD_FOLDER_PATH, 'descriptor.mod');
+invariant(fs.existsSync(MOD_DESCRIPTOR_PATH), `You must provide a descriptor.mod file in ${MOD_FOLDER_PATH}`);
+const MOD_ARCHIVE_PATH = process.env.MOD_ARCHIVE_PATH ?  path.join(__dirname, process.env.MOD_ARCHIVE_PATH) : path.join(MOD_FOLDER_PATH, 'mod.zip');
+invariant(fs.existsSync(MOD_ARCHIVE_PATH), `You must provide a mod archive in ${MOD_FOLDER_PATH}`);
+
+const MOD_ID = process.env.MOD_ID;
+invariant(MOD_ID, 'You must provide a MOD_ID');
+
+const MOD_VERSION = process.env.MOD_VERSION ?? getModVersionFromDescriptor(MOD_DESCRIPTOR_PATH);
+const GAME_VERSION = process.env.GAME_VERSION ?? getGameVersionFromDescriptor(MOD_DESCRIPTOR_PATH);
+const UPLOAD_TIMEOUT = Number(process.env.UPLOAD_TIMEOUT) ?? 60_000 * 20;
+const RELEASE_NOTES = process.env.RELEASE_NOTES || 'No release notes provided.';
+
+test('Upload mod', async ({ page }) => {
 	// Step 1. Login
 	await page.goto(
 		'https://login.paradoxplaza.com/login?service=https%3A%2F%2Fmods.paradoxplaza.com%2Fvalidate%3Fredirect%3D%252F'
@@ -39,7 +54,7 @@ test('test', async ({ page }) => {
 	const fileChooserPromise = page.waitForEvent('filechooser');
 	await page.getByLabel('files').locator('div[role="button"]').click();
 	const fileChooser = await fileChooserPromise;
-	await fileChooser.setFiles(path.join(__dirname, 'Archive.zip'));
+	await fileChooser.setFiles(MOD_ARCHIVE_PATH);
 	await expect(
 		page.getByLabel('files').locator('[class*=__loader]')
 	).not.toHaveClass(/__active/, { timeout: UPLOAD_TIMEOUT });
