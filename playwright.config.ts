@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 import 'dotenv/config';
 
-const UPLOAD_TIMEOUT = Number(process.env.UPLOAD_TIMEOUT) ?? 60_000 * 20;
+const UPLOAD_TIMEOUT = Number(process.env.UPLOAD_TIMEOUT) || 60_000 * 20;
 
 /**
  * See https://playwright.dev/docs/test-configuration.

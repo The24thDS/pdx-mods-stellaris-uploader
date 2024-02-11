@@ -20,7 +20,7 @@ invariant(MOD_ID, 'You must provide a MOD_ID');
 
 const MOD_VERSION = process.env.MOD_VERSION ?? getModVersionFromDescriptor(MOD_DESCRIPTOR_PATH);
 const GAME_VERSION = process.env.GAME_VERSION ?? getGameVersionFromDescriptor(MOD_DESCRIPTOR_PATH);
-const UPLOAD_TIMEOUT = Number(process.env.UPLOAD_TIMEOUT) ?? 60_000 * 20;
+const UPLOAD_TIMEOUT = Number(process.env.UPLOAD_TIMEOUT) || 60_000 * 20;
 const RELEASE_NOTES = process.env.RELEASE_NOTES || 'No release notes provided.';
 
 test('Upload mod', async ({ page }) => {
