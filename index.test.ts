@@ -12,7 +12,7 @@ invariant(process.env.PASSWORD, 'You must provide a PASSWORD');
 const MOD_FOLDER_PATH = path.join(__dirname, process.env.MOD_FOLDER_PATH || 'mod');
 const MOD_DESCRIPTOR_PATH = path.join(MOD_FOLDER_PATH, 'descriptor.mod');
 invariant(fs.existsSync(MOD_DESCRIPTOR_PATH), `You must provide a descriptor.mod file in ${MOD_FOLDER_PATH}`);
-const MOD_ARCHIVE_PATH = process.env.MOD_ARCHIVE_PATH ?  path.join(__dirname, process.env.MOD_ARCHIVE_PATH) : path.join(MOD_FOLDER_PATH, 'mod.zip');
+const MOD_ARCHIVE_PATH = process.env.MOD_ARCHIVE_PATH ? path.join(__dirname, process.env.MOD_ARCHIVE_PATH) : path.join(MOD_FOLDER_PATH, 'mod.zip');
 invariant(fs.existsSync(MOD_ARCHIVE_PATH), `You must provide a mod archive in ${MOD_FOLDER_PATH}`);
 
 const MOD_ID = process.env.MOD_ID;
@@ -26,9 +26,7 @@ const RELEASE_NOTES = process.env.RELEASE_NOTES || 'No release notes provided.';
 test('Upload mod', async ({ page }) => {
 	// Step 1. Login
 	console.info('Step 1. Login');
-	await page.goto(
-		'https://login.paradoxplaza.com/login?service=https%3A%2F%2Fmods.paradoxplaza.com%2Fvalidate%3Fredirect%3D%252F'
-	);
+	await page.goto('https://login.paradoxplaza.com/login?service=https%3A%2F%2Fmods.paradoxplaza.com%2Fvalidate%3Fredirect%3D%252F');
 	await page.getByPlaceholder('Email address').fill(process.env.EMAIL!);
 	await page.getByPlaceholder('Password').fill(process.env.PASSWORD!);
 	await page.keyboard.press('Tab');
@@ -40,9 +38,7 @@ test('Upload mod', async ({ page }) => {
 	console.info('Step 2. Open mod form');
 	await page.goto(`https://mods.paradoxplaza.com/mods/${MOD_ID}/Any`);
 	await page.getByRole('link', { name: 'Edit / New version' }).click();
-	await expect(
-		page.locator('[class*=editMod] [class*=__loader]')
-	).not.toHaveClass(/__active/);
+	await expect(page.locator('[class*=editMod] [class*=__loader]')).not.toHaveClass(/__active/);
 	// I think there's a default routing to the Name tab than can happen so wait for it to hoppefully happen
 	await page.waitForTimeout(500);
 
@@ -59,9 +55,7 @@ test('Upload mod', async ({ page }) => {
 	await page.getByLabel('files').locator('div[role="button"]').click();
 	const fileChooser = await fileChooserPromise;
 	await fileChooser.setFiles(MOD_ARCHIVE_PATH);
-	await expect(
-		page.getByLabel('files').locator('[class*=__loader]')
-	).not.toHaveClass(/__active/, { timeout: UPLOAD_TIMEOUT });
+	await expect(page.getByLabel('files').locator('[class*=__loader]')).not.toHaveClass(/__active/, { timeout: UPLOAD_TIMEOUT });
 
 	// Step 5. Publish new version
 	console.info('Step 5. Publish new version');

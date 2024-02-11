@@ -1,4 +1,13 @@
 {
   "name": "Playwright",
   "image": "mcr.microsoft.com/playwright:v1.41.0-jammy",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-playwright.playwright",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ]
+    }
+  },
 }
