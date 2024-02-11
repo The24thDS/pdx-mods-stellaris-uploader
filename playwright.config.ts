@@ -1,10 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
+import 'dotenv/config';
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// require('dotenv').config();
+const UPLOAD_TIMEOUT = Number(process.env.UPLOAD_TIMEOUT) ?? 60_000 * 20;
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -37,4 +34,6 @@ export default defineConfig({
 			use: { ...devices['Desktop Firefox'] },
 		},
 	],
+	/* Add the specified upload timeout to Playwright's default test timeout */
+	timeout: UPLOAD_TIMEOUT + 30_000,
 });
