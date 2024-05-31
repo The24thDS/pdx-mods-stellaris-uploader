@@ -39,8 +39,8 @@ test('Upload mod', async ({ page }) => {
 	await page.goto(`https://mods.paradoxplaza.com/mods/${MOD_ID}/Any`);
 	await page.getByRole('link', { name: 'Edit / New version' }).click();
 	await expect(page.locator('[class*=editMod] [class*=__loader]')).not.toHaveClass(/__active/);
-	// I think there's a default routing to the Name tab than can happen so wait for it to hoppefully happen
-	await page.waitForTimeout(500);
+	// I think there's a default routing to the Name tab than can happen so wait for it to hopefully happen
+	await page.waitForTimeout(1500);
 
 	// Step 3. Fill version tab
 	console.info('Step 3. Fill version tab');
@@ -65,6 +65,7 @@ test('Upload mod', async ({ page }) => {
 		.first()
 		.click();
 	await page.getByRole('textbox').fill(RELEASE_NOTES);
+	await page.waitForTimeout(500);
 	await page.getByRole('button', { name: 'Submit to changelog' }).click();
 	await page.waitForURL(/.*\/uploaded\?.*/);
 	console.info('Mod uploaded!');
