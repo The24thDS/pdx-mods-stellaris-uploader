@@ -4,7 +4,7 @@ import fs from 'fs';
 import invariant from 'tiny-invariant';
 import { test, expect } from '@playwright/test';
 
-import { getGameVersionFromDescriptor, getModVersionFromDescriptor } from './utils';
+import { findModTile, getGameVersionFromDescriptor, getModVersionFromDescriptor } from './utils';
 
 invariant(process.env.EMAIL, 'You must provide an EMAIL');
 invariant(process.env.PASSWORD, 'You must provide a PASSWORD');
@@ -77,7 +77,9 @@ test('Upload mod', async ({ page }) => {
 	await page.getByRole('textbox').fill(RELEASE_NOTES);
 	await page.waitForTimeout(500);
 	await page.getByRole('button', { name: 'Submit to changelog' }).click();
-	await expect(page.locator('[data-test="notification"]')).toHaveText(/Your mod is currently being published/i);
+	await page.waitForURL(/.*\/uploaded\?.*/, { timeout: 60_000 });
+	await expect(page.locator('[class*=Mods-List-Uploaded-styles__itemWrapper]')).not.toHaveCount(0, { timeout: 60_000 });
+	await expect(await findModTile(page, MOD_ID)).toHaveText(/Mod pending publication/i);
 	console.timeEnd('S5');
 	console.info('Mod uploaded!');
 	console.timeEnd('Total time');
