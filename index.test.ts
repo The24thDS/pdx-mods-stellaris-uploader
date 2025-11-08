@@ -28,13 +28,18 @@ test('Upload mod', async ({ page }) => {
 	// Step 1. Login
 	console.time('S1');
 	console.info('Step 1. Login');
-	await page.goto('https://login.paradoxplaza.com/login?service=https%3A%2F%2Fmods.paradoxplaza.com%2Fvalidate%3Fredirect%3D%252F');
-	await page.getByPlaceholder('Email address').fill(process.env.EMAIL!);
-	await page.getByPlaceholder('Password').fill(process.env.PASSWORD!);
-	await page.keyboard.press('Tab');
-	await page.getByRole('button', { name: 'Login' }).click();
+	await page.goto('https://mods.paradoxplaza.com/');
 	await page.getByRole('button', { name: 'Decline' }).click();
-	await expect(page.getByText(/validating your login/i)).toHaveCount(0);
+	await page.getByText('Log in').click();
+	await page.getByRole('button', { name: 'LOG IN' }).click();
+	await page.waitForURL(/.*login\.paradoxinteractive\.com.*/);
+	await page.getByRole('button', { name: 'OK' }).click();
+	await page.getByLabel('Email address').fill(process.env.EMAIL!);
+	await page.getByLabel('Password').fill(process.env.PASSWORD!);
+	await page.getByRole('button', { name: 'LOGIN' }).click();
+	await page.waitForURL(/.*mods\.paradoxplaza\.com.*/);
+	await page.waitForTimeout(2000);
+	await expect(page.getByRole('heading', { name: 'Logging in...' })).toHaveCount(0);
 	console.timeEnd('S1');
 
 	// Step 2. Open mod form
