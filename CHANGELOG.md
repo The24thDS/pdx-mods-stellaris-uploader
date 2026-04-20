@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.0.0-alpha.0](https://github.com/The24thDS/pdx-mods-stellaris-uploader/compare/v1.1.2...v2.0.0-alpha.0) (2026-04-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* use cookies for authentication
+
+### Features
+
+* use cookies for authentication ([a647504](https://github.com/The24thDS/pdx-mods-stellaris-uploader/commit/a647504e50a709f99167cec9286f3cd4d91ec833))
+
 ## [1.1.2](https://github.com/The24thDS/pdx-mods-stellaris-uploader/compare/v1.1.1...v1.1.2) (2025-11-08)
 
 
