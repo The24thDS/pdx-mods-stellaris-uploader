@@ -8,6 +8,7 @@ const UPLOAD_TIMEOUT = Number(process.env.UPLOAD_TIMEOUT) || 60_000 * 20;
  */
 export default defineConfig({
 	testDir: '.',
+	testMatch: '**/*.{test,setup}.ts',
 	/* Run tests in files in parallel */
 	fullyParallel: true,
 	/* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -30,8 +31,19 @@ export default defineConfig({
 	/* Configure projects for major browsers */
 	projects: [
 		{
-			name: 'firefox',
-			use: { ...devices['Desktop Firefox'] },
+			name: 'authentication',
+			use: {
+				...devices['Desktop Firefox'],
+			},
+			testMatch: /auth\.setup\.ts/,
+		},
+		{
+			name: 'mod-upload',
+			use: {
+				...devices['Desktop Firefox'],
+				storageState: '.auth/user.json',
+			},
+			testMatch: /index\.test\.ts/,
 		},
 	],
 	/* Add the specified upload timeout to Playwright's default test timeout */

@@ -1,13 +1,12 @@
 import 'dotenv/config';
-import path from 'path';
-import fs from 'fs';
+import path from 'node:path';
+import fs from 'node:fs';
 import invariant from 'tiny-invariant';
 import { test, expect } from '@playwright/test';
 
 import { findModTile, getGameVersionFromDescriptor, getModVersionFromDescriptor } from './utils';
 
-invariant(process.env.EMAIL, 'You must provide an EMAIL');
-invariant(process.env.PASSWORD, 'You must provide a PASSWORD');
+invariant(process.env.USERNAME, 'You must provide a USERNAME');
 
 const MOD_FOLDER_PATH = path.join(__dirname, process.env.MOD_FOLDER_PATH || 'mod');
 const MOD_DESCRIPTOR_PATH = path.join(MOD_FOLDER_PATH, 'descriptor.mod');
@@ -25,55 +24,52 @@ const RELEASE_NOTES = process.env.RELEASE_NOTES || 'No release notes provided.';
 
 test('Upload mod', async ({ page }) => {
 	console.time('Total time');
-	// Step 1. Login
-	console.time('S1');
-	console.info('Step 1. Login');
+	// Step 0. Check if logged in
+	console.time('S0');
+	console.info('Step 0. Check if logged in');
 	await page.goto('https://mods.paradoxplaza.com/');
-	await page.getByRole('button', { name: 'Decline' }).click();
-	await page.getByText('Log in').click();
-	await page.getByRole('button', { name: 'LOG IN' }).click();
-	await page.waitForURL(/.*login\.paradoxinteractive\.com.*/);
-	await page.getByRole('button', { name: 'OK' }).click();
-	await page.getByLabel('Email address').fill(process.env.EMAIL!);
-	await page.getByLabel('Password').fill(process.env.PASSWORD!);
-	await page.getByRole('button', { name: 'LOGIN' }).click();
-	await page.waitForURL(/.*mods\.paradoxplaza\.com.*/);
-	await page.waitForTimeout(2000);
-	await expect(page.getByRole('heading', { name: 'Logging in...' })).toHaveCount(0);
-	console.timeEnd('S1');
+	// check if the username is displayed
+	const username = await page.getByText(process.env.USERNAME!).textContent();
+	if (!username) {
+		console.info('Not logged in. Run setup before running the test. Exiting...');
+		return;
+	} else {
+		console.info('Logged in');
+	}
+	console.timeEnd('S0');
 
-	// Step 2. Open mod form
-	console.time('S2');
-	console.info('Step 2. Open mod form');
+	// Step 1. Open mod form
+	console.time('S1');
+	console.info('Step 1. Open mod form');
 	await page.goto(`https://mods.paradoxplaza.com/mods/${MOD_ID}/Any`);
 	await page.getByRole('link', { name: 'Edit / New version' }).click();
 	await expect(page.locator('[class*=editMod] [class*=__loader]')).not.toHaveClass(/__active/);
 	// I think there's a default routing to the Name tab than can happen so wait for it to hopefully happen
 	await page.waitForTimeout(1500);
-	console.timeEnd('S2');
+	console.timeEnd('S1');
 
-	// Step 3. Fill version tab
-	console.time('S3');
-	console.info('Step 3. Fill version tab');
+	// Step 2. Fill version tab
+	console.time('S2');
+	console.info('Step 2. Fill version tab');
 	await page.getByRole('tab', { name: 'version' }).click();
 	await page.locator('input[name="userModVersion"]').fill(MOD_VERSION);
 	await page.locator('input[name="version"]').fill(GAME_VERSION);
-	console.timeEnd('S3');
+	console.timeEnd('S2');
 
-	// Step 4. Upload zip file
-	console.time('S4');
-	console.info('Step 4. Upload zip file');
+	// Step 3. Upload zip file
+	console.time('S3');
+	console.info('Step 3. Upload zip file');
 	await page.getByRole('tab', { name: 'files' }).click();
 	const fileChooserPromise = page.waitForEvent('filechooser');
 	await page.getByLabel('files').locator('div[role="button"]').click();
 	const fileChooser = await fileChooserPromise;
 	await fileChooser.setFiles(MOD_ARCHIVE_PATH);
 	await expect(page.getByLabel('files').locator('[class*=__loader]')).not.toHaveClass(/__active/, { timeout: UPLOAD_TIMEOUT });
-	console.timeEnd('S4');
+	console.timeEnd('S3');
 
-	// Step 5. Publish new version
-	console.time('S5');
-	console.info('Step 5. Publish new version');
+	// Step 4. Publish new version
+	console.time('S4');
+	console.info('Step 4. Publish new version');
 	await page.getByRole('tab', { name: 'preview' }).click();
 	await page
 		.getByRole('button', { name: /publish mod/i })
@@ -85,7 +81,7 @@ test('Upload mod', async ({ page }) => {
 	await page.waitForURL(/.*\/uploaded\?.*/, { timeout: 60_000 });
 	await expect(page.locator('[class*=Mods-List-Uploaded-styles__itemWrapper]')).not.toHaveCount(0, { timeout: 60_000 });
 	await expect(await findModTile(page, MOD_ID)).toHaveText(/Mod pending publication/i);
-	console.timeEnd('S5');
+	console.timeEnd('S4');
 	console.info('Mod uploaded!');
 	console.timeEnd('Total time');
 });

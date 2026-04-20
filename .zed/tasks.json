@@ -1,0 +1,12 @@
+[
+	{
+		"label": "Playwright: Auth Setup",
+		"command": "yarn auth",
+		"cwd": "$ZED_WORKTREE_ROOT",
+	},
+	{
+		"label": "Playwright: Upload Mod",
+		"command": "yarn start",
+		"cwd": "$ZED_WORKTREE_ROOT",
+	},
+]

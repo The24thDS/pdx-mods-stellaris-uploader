@@ -17,3 +17,4 @@ Dockerfile
 .env.example
 .devcontainer
 .dockerignore
+.auth
