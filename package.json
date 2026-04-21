@@ -8,7 +8,8 @@
 	},
 	"scripts": {
 		"start": "playwright test index.test.ts",
-		"auth": "rm -rf .auth && playwright test auth.setup.ts"
+		"auth": "rm -rf .auth && playwright test auth.setup.ts",
+		"logged-state": "playwright test logged-state.test.ts"
 	},
 	"dependencies": {
 		"@playwright/test": "^1.56.1",

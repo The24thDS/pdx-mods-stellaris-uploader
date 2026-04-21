@@ -30,12 +30,7 @@ test('Upload mod', async ({ page }) => {
 	await page.goto('https://mods.paradoxplaza.com/');
 	// check if the username is displayed
 	const username = await page.getByText(process.env.USERNAME!).textContent();
-	if (!username) {
-		console.info('Not logged in. Run setup before running the test. Exiting...');
-		return;
-	} else {
-		console.info('Logged in');
-	}
+	invariant(username, 'Not logged in. Username not found on the page.');
 	console.timeEnd('S0');
 
 	// Step 1. Open mod form

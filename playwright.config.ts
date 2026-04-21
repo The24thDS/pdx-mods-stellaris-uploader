@@ -36,6 +36,16 @@ export default defineConfig({
 				...devices['Desktop Firefox'],
 			},
 			testMatch: /auth\.setup\.ts/,
+			timeout: 30_000,
+		},
+		{
+			name: 'logged-state',
+			use: {
+				...devices['Desktop Firefox'],
+				storageState: '.auth/user.json',
+			},
+			testMatch: /logged-state\.test\.ts/,
+			timeout: 30_000,
 		},
 		{
 			name: 'mod-upload',
@@ -44,8 +54,8 @@ export default defineConfig({
 				storageState: '.auth/user.json',
 			},
 			testMatch: /index\.test\.ts/,
+			/* Add the specified upload timeout to Playwright's default test timeout */
+			timeout: UPLOAD_TIMEOUT + 30_000,
 		},
 	],
-	/* Add the specified upload timeout to Playwright's default test timeout */
-	timeout: UPLOAD_TIMEOUT + 30_000,
 });
