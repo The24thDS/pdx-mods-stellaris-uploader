@@ -17,6 +17,7 @@ setup('authenticate', async ({ page }) => {
 	await page.getByRole('button', { name: 'OK' }).click();
 	await page.getByLabel('Email address').fill(process.env.EMAIL);
 	await page.getByLabel('Password').fill(process.env.PASSWORD);
+	await page.getByRole('checkbox', { name: 'Remember me' }).check();
 	await page.getByRole('button', { name: 'LOGIN' }).click();
 	await page.waitForURL(/.*mods\.paradoxplaza\.com.*/);
 	await page.waitForTimeout(2000);
