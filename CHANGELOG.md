@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.0.0-alpha.1](https://github.com/The24thDS/pdx-mods-stellaris-uploader/compare/v2.0.0-alpha.0...v2.0.0-alpha.1) (2026-04-21)
+
+
+### Features
+
+* add test for validating and refreshing session ([fb22206](https://github.com/The24thDS/pdx-mods-stellaris-uploader/commit/fb222062958d534ef563c9c34cdcd1843ce879a0))
+* check 'Remember me' checkbox during authentication ([e5ddbc8](https://github.com/The24thDS/pdx-mods-stellaris-uploader/commit/e5ddbc8a0b9352dac54c585cb0640336ef9ff205))
+
 ## [2.0.0-alpha.0](https://github.com/The24thDS/pdx-mods-stellaris-uploader/compare/v1.1.2...v2.0.0-alpha.0) (2026-04-20)
 
 
