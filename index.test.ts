@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import invariant from 'tiny-invariant';
 import { test, expect } from '@playwright/test';
 
-import { findModTile, getGameVersionFromDescriptor, getModVersionFromDescriptor } from './utils';
+import { getGameVersionFromDescriptor, getModVersionFromDescriptor } from './utils';
 
 invariant(process.env.USERNAME, 'You must provide a USERNAME');
 
@@ -43,23 +43,26 @@ test('Upload mod', async ({ page }) => {
 	await page.waitForTimeout(1500);
 	console.timeEnd('S1');
 
-	// Step 2. Fill version tab
+	// Step 2. Fill files tab
 	console.time('S2');
-	console.info('Step 2. Fill version tab');
-	await page.getByRole('tab', { name: 'version' }).click();
+	console.info('Step 2. Fill files tab');
+	await page.getByRole('tab', { name: 'files' }).click();
 	await page.locator('input[name="userModVersion"]').fill(MOD_VERSION);
 	await page.locator('input[name="version"]').fill(GAME_VERSION);
+	// The changelog entry is a required field of the form, the publish button stays disabled without it.
+	await page.locator('textarea[name="changelogEntry"]').fill(RELEASE_NOTES);
 	console.timeEnd('S2');
 
 	// Step 3. Upload zip file
 	console.time('S3');
 	console.info('Step 3. Upload zip file');
-	await page.getByRole('tab', { name: 'files' }).click();
-	const fileChooserPromise = page.waitForEvent('filechooser');
-	await page.getByLabel('files').locator('div[role="button"]').click();
-	const fileChooser = await fileChooserPromise;
-	await fileChooser.setFiles(MOD_ARCHIVE_PATH);
-	await expect(page.getByLabel('files').locator('[class*=__loader]')).not.toHaveClass(/__active/, { timeout: UPLOAD_TIMEOUT });
+	// The dropzone's <input type=file> is hidden, so set the files directly instead of
+	// going through the native file chooser dialog.
+	const fileUpload = page.waitForResponse((response) => response.request().method() === 'PUT' && /amazonaws\.com/.test(response.url()), { timeout: UPLOAD_TIMEOUT });
+	await page.locator('input[type="file"][accept=".zip"]').setInputFiles(MOD_ARCHIVE_PATH);
+	const uploaded = await fileUpload;
+	invariant(uploaded.ok(), `Uploading the mod archive failed with HTTP ${uploaded.status()}`);
+	await expect(page.getByRole('button', { name: /remove file/i }).first()).toBeVisible();
 	console.timeEnd('S3');
 
 	// Step 4. Publish new version
@@ -67,15 +70,11 @@ test('Upload mod', async ({ page }) => {
 	console.info('Step 4. Publish new version');
 	await page.getByRole('tab', { name: 'preview' }).click();
 	await page
-		.getByRole('button', { name: /publish mod/i })
+		.getByRole('button', { name: /publish new version/i })
 		.first()
 		.click();
-	await page.getByRole('textbox').fill(RELEASE_NOTES);
-	await page.waitForTimeout(500);
-	await page.getByRole('button', { name: 'Submit to changelog' }).click();
-	await page.waitForURL(/.*\/uploaded\?.*/, { timeout: 60_000 });
-	await expect(page.locator('[class*=Mods-List-Uploaded-styles__itemWrapper]')).not.toHaveCount(0, { timeout: 60_000 });
-	await expect(await findModTile(page, MOD_ID)).toHaveText(/Mod pending publication/i);
+	await page.waitForURL(new RegExp(`/mods/${MOD_ID}/`), { timeout: 60_000 });
+	await expect(page.getByText(/pending publication/i).first()).toBeVisible({ timeout: 60_000 });
 	console.timeEnd('S4');
 	console.info('Mod uploaded!');
 	console.timeEnd('Total time');

@@ -19,6 +19,10 @@ This could potentially be used for other games as well, but I have not tested it
 | `UPLOAD_TIMEOUT`   | The timeout for the upload in milliseconds               | `60_000 * 20` (20 mins)      |
 | `RELEASE_NOTES`    | The release notes to use when submitting the new version | `No release notes provided.` |
 
+> **Note**
+> PDX Mods does not accept a version number that already exists, so the `version` field of
+> `descriptor.mod` must be bumped every time you want to upload a new version.
+
 # Usage
 
 ## Directly
@@ -54,6 +58,17 @@ This image can be used to run the uploader without having to install node.js and
   ```bash
   docker run --rm -v ./:/app/mod -it --env-file .env pdxmoduploader yarn start
   ```
+
+> **Warning**
+> `--env-file` passes values **verbatim**, it does not strip surrounding quotes. If your
+> `.env` quotes values (e.g. `EMAIL="foo@bar.com"`), the login form receives the quotes as
+> part of the value and rejects them ("Please type a valid email address"). Either drop the
+> quotes from `.env`, or omit `--env-file` entirely and rely on the bind-mounted `.env` being
+> read by `dotenv/config`, which does strip quotes:
+>
+> ```bash
+> docker run --rm -v ./:/app/mod -it pdxmoduploader yarn start
+> ```
 
 #### docker-compose
 
