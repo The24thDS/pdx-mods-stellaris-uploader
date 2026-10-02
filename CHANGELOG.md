@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.0.0-alpha.2](https://github.com/The24thDS/pdx-mods-stellaris-uploader/compare/v2.0.0-alpha.1...v2.0.0-alpha.2) (2026-10-02)
+
+
+### Bug Fixes
+
+* update upload flow to match redesigned Paradox Mods upload form ([e7d10ef](https://github.com/The24thDS/pdx-mods-stellaris-uploader/commit/e7d10efdd359371b9488a020002d735d53c8dadc))
+
 ## [2.0.0-alpha.1](https://github.com/The24thDS/pdx-mods-stellaris-uploader/compare/v2.0.0-alpha.0...v2.0.0-alpha.1) (2026-04-21)
 
 
