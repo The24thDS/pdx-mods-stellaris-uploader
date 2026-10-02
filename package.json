@@ -4,12 +4,15 @@
 	"main": "index.js",
 	"license": "MIT",
 	"devDependencies": {
-		"@types/node": "^20.11.4"
+		"@types/node": "^20.11.4",
+		"commit-and-tag-version": "^11.3.0",
+		"conventional-changelog-conventionalcommits": "^10.4.0"
 	},
 	"scripts": {
 		"start": "playwright test index.test.ts",
 		"auth": "rm -rf .auth && playwright test auth.setup.ts",
-		"logged-state": "playwright test logged-state.test.ts"
+		"logged-state": "playwright test logged-state.test.ts",
+		"release": "commit-and-tag-version"
 	},
 	"dependencies": {
 		"@playwright/test": "^1.56.1",
