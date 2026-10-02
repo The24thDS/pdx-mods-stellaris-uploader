@@ -23,6 +23,17 @@ This could potentially be used for other games as well, but I have not tested it
 > PDX Mods does not accept a version number that already exists, so the `version` field of
 > `descriptor.mod` must be bumped every time you want to upload a new version.
 
+# Keeping the uploader working
+
+Paradox Mods redesigns its upload form without notice and publishes no changelog for it, so
+this test breaks without warning. Run it regularly to find out whether the form still matches
+the selectors in `index.test.ts`.
+
+There is an agent skill for the whole routine at
+[`.agents/skills/pdx-mods-upload-check/`](.agents/skills/pdx-mods-upload-check/) — a
+copy-paste run recipe, the current form selectors, and a probe script that dumps the live
+form's structure when a selector breaks.
+
 # Usage
 
 ## Directly
