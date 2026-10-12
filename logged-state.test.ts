@@ -10,8 +10,7 @@ test('Check login state', async ({ page }) => {
 	console.info('Step 0. Check if logged in');
 	await page.goto('https://mods.paradoxplaza.com/');
 	// check if the username is displayed
-	const username = await page.getByText(process.env.USERNAME).textContent();
-	invariant(username, 'Not logged in. Username not found on the page.');
+	await page.getByText(process.env.USERNAME, { exact: true }).waitFor({ state: 'visible' });
 	console.info('Logged in');
 	await page.context().storageState({ path: AUTH_FILE });
 });

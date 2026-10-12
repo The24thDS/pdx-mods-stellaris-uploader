@@ -120,8 +120,9 @@ up to it, and click only when the intent is to actually upload.
 
 ## Current form structure
 
-Verified 2026-10-02 against mod 72663. **This table is the thing that goes stale** — when the
-probe disagrees with it, the probe is right.
+Verified 2026-10-12 against mod 72663. The form selectors still match the 2026-10-02 structure;
+the live page also showed a OneTrust consent overlay that can intercept clicks. **This table is
+the thing that goes stale** — when the probe disagrees with it, the probe is right.
 
 | Thing | Selector | Notes |
 | --- | --- | --- |
@@ -131,7 +132,8 @@ probe disagrees with it, the probe is right.
 | Zip dropzone | `input[type="file"][accept=".zip"]` | Hidden (`display:none`). Use `setInputFiles` |
 | Publish | `button` named `/publish new version/i` | Was "publish mod". Disabled while the changelog is empty |
 | After publish | redirects to `/mods/{id}/Any` | **Not** `/uploaded` — shows a "pending publication" banner |
-| Authentication | `link` "Edit / New version" on the mod page | Wait for `[class*=editMod] [class*=__loader]` to stop being active |
+| Cookie consent | Button named `Decline` (when present) | OneTrust can cover the tabs and intercept clicks; dismiss it before opening the form |
+| Authentication | `link` "Edit / New version" on the mod page | Requires an authenticated session; wait for `[class*=editMod] [class*=__loader]` to stop being active |
 
 ### Upload completion has no DOM signal
 

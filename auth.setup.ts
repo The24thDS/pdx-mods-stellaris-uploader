@@ -20,8 +20,9 @@ setup('authenticate', async ({ page }) => {
 	await page.getByRole('checkbox', { name: 'Remember me' }).check();
 	await page.getByRole('button', { name: 'LOGIN' }).click();
 	await page.waitForURL(/.*mods\.paradoxplaza\.com.*/);
-	await page.waitForTimeout(2000);
-	await expect(page.getByRole('heading', { name: 'Logging in...' })).toHaveCount(0);
+	// The OAuth callback can arrive before the app has stored its tokens. Wait for
+	// the authenticated account indicator instead of capturing state after a delay.
+	await expect(page.getByText(process.env.USERNAME, { exact: true })).toBeVisible({ timeout: 30_000 });
 
 	await page.context().storageState({ path: AUTH_FILE });
 });
