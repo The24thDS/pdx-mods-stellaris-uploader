@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.0.0](https://github.com/The24thDS/pdx-mods-stellaris-uploader/compare/v2.0.0-alpha.2...v2.0.0) (2026-11-02)
+
+
+### Bug Fixes
+
+* **upload:** 🐛 Handle consent overlay and await login ([4ca3fbe](https://github.com/The24thDS/pdx-mods-stellaris-uploader/commit/4ca3fbe05f2fefcc3236d384440347a5c9eaa92d))
+
 ## [2.0.0-alpha.2](https://github.com/The24thDS/pdx-mods-stellaris-uploader/compare/v2.0.0-alpha.1...v2.0.0-alpha.2) (2026-10-02)
 
 
