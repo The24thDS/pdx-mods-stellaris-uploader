@@ -29,14 +29,17 @@ test('Upload mod', async ({ page }) => {
 	console.info('Step 0. Check if logged in');
 	await page.goto('https://mods.paradoxplaza.com/');
 	// check if the username is displayed
-	const username = await page.getByText(process.env.USERNAME!).textContent();
-	invariant(username, 'Not logged in. Username not found on the page.');
+	const username = page.getByText(process.env.USERNAME!, { exact: true });
+	await expect(username).toBeVisible();
 	console.timeEnd('S0');
 
 	// Step 1. Open mod form
 	console.time('S1');
 	console.info('Step 1. Open mod form');
 	await page.goto(`https://mods.paradoxplaza.com/mods/${MOD_ID}/Any`);
+	// OneTrust's consent banner can cover the upload tabs and intercept their clicks.
+	const declineCookies = page.getByRole('button', { name: 'Decline', exact: true });
+	if (await declineCookies.isVisible().catch(() => false)) await declineCookies.click();
 	await page.getByRole('link', { name: 'Edit / New version' }).click();
 	await expect(page.locator('[class*=editMod] [class*=__loader]')).not.toHaveClass(/__active/);
 	// I think there's a default routing to the Name tab than can happen so wait for it to hopefully happen
