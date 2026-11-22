@@ -12,7 +12,8 @@ setup('authenticate', async ({ page }) => {
 	await page.goto('https://mods.paradoxplaza.com/');
 	await page.getByRole('button', { name: 'Decline' }).click();
 	await page.getByText('Log in').click();
-	await page.getByRole('button', { name: 'LOG IN' }).click();
+	const loginModal = page.locator('[class*="SignInDialog-styles__root"]');
+	await loginModal.getByRole('button', { name: 'Log in', exact: true }).click();
 	await page.waitForURL(/.*login\.paradoxinteractive\.com.*/);
 	await page.getByRole('button', { name: 'OK' }).click();
 	await page.getByLabel('Email address').fill(process.env.EMAIL);
