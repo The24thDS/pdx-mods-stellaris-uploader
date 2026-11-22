@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.0.1](https://github.com/The24thDS/pdx-mods-stellaris-uploader/compare/v2.0.0...v2.0.1) (2026-11-22)
+
+
+### Bug Fixes
+
+* **auth:** 🔧 scope login button to sign-in modal ([7ff156a](https://github.com/The24thDS/pdx-mods-stellaris-uploader/commit/7ff156a1a7058fa2f617678e579b25e41bb1b107))
+
 ## [2.0.0](https://github.com/The24thDS/pdx-mods-stellaris-uploader/compare/v2.0.0-alpha.2...v2.0.0) (2026-11-02)
 
 
